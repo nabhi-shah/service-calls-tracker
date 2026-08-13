@@ -165,15 +165,15 @@ export default function FinanceView() {
   // -- View Renderers --
   const renderYtdView = () => {
     return (
-      <div className="max-w-none inline-block min-w-full bg-white border border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm overflow-hidden mt-0">
+      <div className="max-w-none min-w-full bg-white border-x border-b border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm mt-0 h-full overflow-auto relative isolate">
         <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
-          <thead className="bg-slate-50 text-slate-500 font-bold tracking-wider uppercase text-xs">
+          <thead className="text-slate-500 font-bold tracking-wider uppercase text-xs">
             <tr>
-              <th className="px-6 py-4 border-r border-b border-slate-200 sticky left-0 bg-slate-50 z-10">Location</th>
+              <th className="px-6 py-4 border-r border-b border-slate-200 sticky left-0 top-0 z-30 bg-slate-50 shadow-[1px_1px_0_0_#e2e8f0] isolate">Location</th>
               {MONTH_NAMES.map((name, i) => (
-                <th key={name} className="px-4 py-4 border-r border-b border-slate-200 text-right">{name}</th>
+                <th key={name} className="px-4 py-4 border-r border-b border-slate-200 text-right sticky top-0 z-20 bg-slate-50 shadow-[0_1px_0_0_#e2e8f0] isolate">{name}</th>
               ))}
-              <th className="px-6 py-4 text-right text-indigo-700 bg-indigo-50/50 border-b border-slate-200">YTD Total</th>
+              <th className="px-6 py-4 text-right text-indigo-700 bg-indigo-50 border-b border-slate-200 sticky top-0 z-20 shadow-[0_1px_0_0_#e2e8f0] isolate">YTD Total</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -231,18 +231,18 @@ export default function FinanceView() {
   const renderMonthView = (monthIdx) => {
     const monthStr = getMonthStr(monthIdx)
     return (
-      <div className="max-w-[1200px] bg-white border border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm overflow-hidden mt-0">
+      <div className="max-w-[1200px] bg-white border-x border-b border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm mt-0 h-full overflow-auto relative isolate">
         <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
-          <thead className="bg-slate-50 text-slate-500 font-bold tracking-wider uppercase text-xs">
+          <thead className="text-slate-500 font-bold tracking-wider uppercase text-xs">
             <tr>
-              <th className="px-6 py-4 border-r border-b border-slate-200 sticky left-0 bg-slate-50 z-10">Location</th>
+              <th className="px-6 py-4 border-r border-b border-slate-200 sticky left-0 top-0 z-30 bg-slate-50 shadow-[1px_1px_0_0_#e2e8f0] isolate">Location</th>
               {WEEKS.map((w, i) => (
-                <th key={w} className="px-4 py-4 border-r border-b border-slate-200 text-center">
+                <th key={w} className="px-4 py-4 border-r border-b border-slate-200 text-center sticky top-0 z-20 bg-slate-50 shadow-[0_1px_0_0_#e2e8f0] isolate">
                   <div className="text-slate-400 mb-0.5 text-[10px]">Week {i+1}</div>
                   <div className="text-slate-800">{getWeekRange(selectedYear, monthIdx, i)}</div>
                 </th>
               ))}
-              <th className="px-6 py-4 text-right text-indigo-700 bg-indigo-50/50 border-b border-slate-200 align-bottom">Month Total</th>
+              <th className="px-6 py-4 text-right text-indigo-700 bg-indigo-50 border-b border-slate-200 align-bottom sticky top-0 z-20 shadow-[0_1px_0_0_#e2e8f0] isolate">Month Total</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -341,8 +341,8 @@ export default function FinanceView() {
       </header>
 
       {mainTab === 'finance' ? (
-        <main className="flex-1 overflow-auto p-6">
-        <div className="flex space-x-1 mb-0 border-b border-slate-200 pb-[1px]">
+        <main className="flex-1 flex flex-col p-6 min-h-0">
+        <div className="flex space-x-1 mb-0 border-b border-slate-200 pb-[1px] flex-shrink-0">
           <button
             onClick={() => setActiveTab('YTD')}
             className={cn(
@@ -370,7 +370,7 @@ export default function FinanceView() {
           ))}
         </div>
         
-        <div className="overflow-x-auto pb-8 pt-0">
+        <div className="flex-1 min-h-0">
           {activeTab === 'YTD' ? renderYtdView() : renderMonthView(activeTab)}
         </div>
         </main>
