@@ -158,8 +158,8 @@ function BrokerCard({ broker, onUpdate, onDelete, onAddLocation, onDeleteLocatio
           )}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full">
-            {broker.locations.length} loc.
+          <span className="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            {broker.locations.length} <MapPin weight="fill" size={12} />
           </span>
           <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full">
             {totalCoams} COAMs

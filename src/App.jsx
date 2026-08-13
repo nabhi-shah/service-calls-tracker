@@ -19,7 +19,7 @@ function MainApp() {
   const [calls, setCalls] = useState([])
   const [brokers, setBrokers] = useState([])
   const [loading, setLoading] = useState(true)
-  const [auth, setAuth] = useState(false)
+  const [auth, setAuth] = useState(() => localStorage.getItem('adminAuth') === 'true')
   const [pinInput, setPinInput] = useState('')
 
   useEffect(() => {
@@ -64,6 +64,7 @@ function MainApp() {
     e.preventDefault()
     if (pinInput === '1234') {
       setAuth(true)
+      localStorage.setItem('adminAuth', 'true')
     } else {
       toast.error('Incorrect Admin PIN')
       setPinInput('')

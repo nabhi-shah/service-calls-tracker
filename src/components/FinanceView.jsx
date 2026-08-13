@@ -35,7 +35,7 @@ export default function FinanceView() {
   const [loading, setLoading] = useState(true)
   const [broker, setBroker] = useState(null)
   const [finances, setFinances] = useState([])
-  const [auth, setAuth] = useState(false)
+  const [auth, setAuth] = useState(() => localStorage.getItem(`brokerAuth_${brokerId}`) === 'true')
   const [pinInput, setPinInput] = useState('')
 
   // State for Year and Tabs
@@ -77,6 +77,7 @@ export default function FinanceView() {
     e.preventDefault()
     if (pinInput === broker?.pin) {
       setAuth(true)
+      localStorage.setItem(`brokerAuth_${brokerId}`, 'true')
     } else {
       toast.error('Incorrect PIN')
       setPinInput('')
