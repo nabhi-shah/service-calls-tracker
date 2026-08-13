@@ -71,11 +71,11 @@ export default function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="h-screen bg-slate-50 font-sans flex flex-col overflow-hidden">
       <Toaster position="bottom-right" richColors closeButton />
 
       {/* ── Header ───────────────────────────────────────── */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+      <header className="bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
         <div className="max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between gap-6 flex-wrap">
           <div>
             <h1 className="text-xl font-bold text-slate-900 tracking-tight">
@@ -105,9 +105,9 @@ export default function App() {
       </header>
 
       {/* ── Content ──────────────────────────────────────── */}
-      <main className="max-w-[1600px] mx-auto px-6 py-6">
+      <main className="max-w-[1600px] w-full mx-auto px-6 py-6 flex-1 flex flex-col overflow-hidden min-h-0">
         {loading ? (
-          <div className="flex items-center justify-center h-64 text-slate-400 text-sm gap-3">
+          <div className="flex items-center justify-center h-full text-slate-400 text-sm gap-3">
             <svg className="animate-spin h-5 w-5 text-indigo-500" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
@@ -120,7 +120,9 @@ export default function App() {
               <ServiceCallsTab calls={calls} brokers={brokers} onSave={saveCalls} />
             )}
             {activeTab === 'locations' && (
-              <LocationsTab brokers={brokers} onSave={saveBrokers} />
+              <div className="flex-1 overflow-y-auto pb-12">
+                <LocationsTab brokers={brokers} onSave={saveBrokers} />
+              </div>
             )}
           </>
         )}

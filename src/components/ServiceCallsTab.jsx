@@ -251,9 +251,9 @@ export default function ServiceCallsTab({ calls, brokers, onSave }) {
   ]
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex-1 flex flex-col min-h-0">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50/50">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex-shrink-0">
         <div className="flex items-center gap-3">
           <span className="text-sm font-semibold text-slate-700">{calls.length} calls</span>
           <span className="text-slate-300">|</span>
@@ -271,12 +271,12 @@ export default function ServiceCallsTab({ calls, brokers, onSave }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto min-h-[400px] pb-64">
+      <div className="flex-1 overflow-auto pb-64 relative">
         <table className="w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+          <thead className="sticky top-0 z-20 bg-slate-50">
+            <tr className="border-b border-slate-200">
               {cols.map(c => (
-                <th key={c.key} className={cn('px-3 py-2.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap', c.w)}>
+                <th key={c.key} className={cn('px-3 py-2.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap bg-slate-50', c.w)}>
                   {c.label}
                 </th>
               ))}
