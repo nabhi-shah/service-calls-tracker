@@ -271,7 +271,7 @@ export default function ServiceCallsTab({ calls, brokers, onSave }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto min-h-[400px] pb-64">
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50">
