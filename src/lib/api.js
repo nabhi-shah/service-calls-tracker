@@ -121,6 +121,14 @@ export async function fetchFinances(brokerId) {
   return data
 }
 
+export async function upsertFinance(financeData) {
+  const { error } = await supabase
+    .from('finances')
+    .upsert(financeData, { onConflict: 'broker_id, location_id, month' })
+    
+  if (error) throw error
+}
+
 export async function updateBrokerAuth(brokerId, pin, shareToken) {
   const { error } = await supabase
     .from('brokers')
