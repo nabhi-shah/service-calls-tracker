@@ -170,21 +170,23 @@ function BrokerCard({ broker, onUpdate, onDelete, onAddLocation, onDeleteLocatio
             className="p-1.5 rounded-lg text-slate-400 hover:text-green-600 hover:bg-green-50 transition-colors ml-2"
             title="View Finances"
           >
-            <CurrencyDollar size={16} weight="bold" />
+            <CurrencyDollar size={18} />
           </Link>
           <button
             onClick={e => { e.stopPropagation(); setEditDrawer(true) }}
             className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
           >
-            <PencilSimple size={14} />
+            <PencilSimple size={18} />
           </button>
           <button
             onClick={e => { e.stopPropagation(); onDelete() }}
             className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
           >
-            <Trash size={14} />
+            <Trash size={18} />
           </button>
-          {open ? <CaretDown size={14} className="text-slate-400" /> : <CaretRight size={14} className="text-slate-400" />}
+          <div className="p-1.5 text-slate-400">
+            {open ? <CaretDown size={18} /> : <CaretRight size={18} />}
+          </div>
         </div>
       </div>
 
