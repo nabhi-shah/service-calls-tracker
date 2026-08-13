@@ -3,6 +3,8 @@ import { Plus, PencilSimple, Trash, Phone, Buildings, MapPin, CaretDown, CaretRi
 import { Link } from 'react-router-dom'
 import { Drawer } from 'vaul'
 import { cn } from '../lib/utils'
+import { deleteBroker as apiDeleteBroker, deleteLocation as apiDeleteLocation } from '../lib/api'
+import { toast } from 'sonner'
 
 // ── Vaul Drawer wrapper ────────────────────────────────────
 function AppDrawer({ open, onOpenChange, title, children }) {
@@ -268,9 +270,16 @@ export default function LocationsTab({ brokers, onSave }) {
     onSave(next)
   }
 
-  const deleteBroker = (brokerId) => {
-    if (!confirm('Delete this group and all its locations?')) return
-    onSave(brokers.filter(b => b.id !== brokerId))
+  const deleteBroker = async (brokerId) => {
+    if (!window.confirm('Delete this group and all its locations?')) return
+    try {
+      await apiDeleteBroker(brokerId)
+      onSave(brokers.filter(b => b.id !== brokerId))
+      toast.success('Group deleted!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to delete group')
+    }
   }
 
   const addLocation = (brokerId, locData) => {
@@ -281,13 +290,22 @@ export default function LocationsTab({ brokers, onSave }) {
     onSave(next)
   }
 
-  const deleteLocation = (brokerId, locId) => {
-    if (!confirm('Delete this location?')) return
-    const next = brokers.map(b => {
-      if (b.id !== brokerId) return b
-      return { ...b, locations: b.locations.filter(l => l.id !== locId) }
-    })
-    onSave(next)
+  const deleteLocation = async (brokerId, locId) => {
+    if (!window.confirm('Delete this location?')) return
+    try {
+      // If locId is a number it might be an optimistic local ID, but Supabase uses UUIDs.
+      // However, we just pass locId to api.
+      await apiDeleteLocation(locId)
+      const next = brokers.map(b => {
+        if (b.id !== brokerId) return b
+        return { ...b, locations: b.locations.filter(l => l.id !== locId) }
+      })
+      onSave(next)
+      toast.success('Location deleted!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to delete location')
+    }
   }
 
   return (
