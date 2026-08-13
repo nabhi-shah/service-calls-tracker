@@ -165,7 +165,7 @@ export default function FinanceView() {
   // -- View Renderers --
   const renderYtdView = () => {
     return (
-      <div className="max-w-none min-w-full bg-white border-x border-b border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm mt-0 flex-1 overflow-auto">
+      <div className="max-w-none min-w-full bg-white border border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm mt-0 overflow-auto max-h-[75vh]">
         <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
           <thead className="bg-slate-50 text-slate-500 font-bold tracking-wider uppercase text-xs">
             <tr>
@@ -231,7 +231,7 @@ export default function FinanceView() {
   const renderMonthView = (monthIdx) => {
     const monthStr = getMonthStr(monthIdx)
     return (
-      <div className="max-w-[1200px] bg-white border-x border-b border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm mt-0 flex-1 overflow-auto">
+      <div className="max-w-[1200px] bg-white border border-slate-200 rounded-b-2xl rounded-tr-2xl shadow-sm mt-0 overflow-auto max-h-[75vh]">
         <table className="w-full text-sm text-left border-collapse whitespace-nowrap">
           <thead className="bg-slate-50 text-slate-500 font-bold tracking-wider uppercase text-xs">
             <tr>
@@ -341,8 +341,8 @@ export default function FinanceView() {
       </header>
 
       {mainTab === 'finance' ? (
-        <main className="flex-1 flex flex-col p-6 min-h-0">
-        <div className="flex space-x-1 mb-0 border-b border-slate-200 pb-[1px] flex-shrink-0">
+        <main className="flex-1 overflow-auto p-6">
+        <div className="flex space-x-1 mb-0 border-b border-slate-200 pb-[1px]">
           <button
             onClick={() => setActiveTab('YTD')}
             className={cn(
@@ -370,7 +370,7 @@ export default function FinanceView() {
           ))}
         </div>
         
-        <div className="flex-1 min-h-0 flex flex-col">
+        <div className="overflow-x-auto pb-8 pt-0">
           {activeTab === 'YTD' ? renderYtdView() : renderMonthView(activeTab)}
         </div>
         </main>
