@@ -232,7 +232,7 @@ function LocationSelect({ locationId, brokers, onChange }) {
 }
 
 // ── Main Component ─────────────────────────────────────────
-export default function ServiceCallsTab({ calls, brokers, onSave }) {
+export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
   const idCounter = useRef(Math.max(...calls.map(c => c.id), 0) + 1)
 
   const updateCall = useCallback((id, field, value) => {
@@ -269,7 +269,12 @@ export default function ServiceCallsTab({ calls, brokers, onSave }) {
   }
 
   const deleteRow = (id) => {
-    onSave(calls.filter(c => c.id !== id))
+    if (onDelete) {
+      onDelete(id)
+    } else {
+      // Fallback if onDelete is not provided
+      onSave(calls.filter(c => c.id !== id))
+    }
   }
 
   const cols = [

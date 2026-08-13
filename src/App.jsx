@@ -5,7 +5,7 @@ import { ClipboardText, MapPin, Lock } from '@phosphor-icons/react'
 import ServiceCallsTab from './components/ServiceCallsTab'
 import LocationsTab from './components/LocationsTab'
 import FinanceView from './components/FinanceView'
-import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers } from './lib/api'
+import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers, deleteServiceCall } from './lib/api'
 import { INITIAL_CALLS, INITIAL_BROKERS, flatRowsToBrokers, brokersToFlatRows } from './lib/data'
 import { cn } from './lib/utils'
 
@@ -46,6 +46,17 @@ function MainApp() {
     } catch (e) {
       console.error(e)
       toast.error('Failed to save to Supabase.')
+    }
+  }
+
+  const deleteCall = async (id) => {
+    try {
+      await deleteServiceCall(id)
+      setCalls(prev => prev.filter(c => c.id !== id))
+      toast.success('Service call deleted!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to delete service call.')
     }
   }
 
@@ -137,7 +148,7 @@ function MainApp() {
         ) : (
           <>
             {activeTab === 'calls' && (
-              <ServiceCallsTab calls={calls} brokers={brokers} onSave={saveCalls} />
+              <ServiceCallsTab calls={calls} brokers={brokers} onSave={saveCalls} onDelete={deleteCall} />
             )}
             {activeTab === 'locations' && (
               <div className="flex-1 overflow-y-auto pb-12">
