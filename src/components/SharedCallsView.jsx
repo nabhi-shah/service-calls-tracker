@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { fetchServiceCalls, fetchLocations } from '../lib/api'
+import { fetchServiceCalls, fetchLocations, pushServiceCalls, deleteServiceCall } from '../lib/api'
 import ServiceCallsTab from './ServiceCallsTab'
 import { ClipboardText } from '@phosphor-icons/react'
+import { toast } from 'sonner'
 
 export default function SharedCallsView() {
   const [calls, setCalls] = useState([])
@@ -23,6 +24,28 @@ export default function SharedCallsView() {
     load()
   }, [])
 
+  const saveCalls = async (updated) => {
+    setCalls(updated)
+    try {
+      await pushServiceCalls(updated)
+      toast.success('Service calls saved to Cloud!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to save.')
+    }
+  }
+
+  const deleteCall = async (id) => {
+    try {
+      await deleteServiceCall(id)
+      setCalls(prev => prev.filter(c => c.id !== id))
+      toast.success('Service call deleted!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to delete service call.')
+    }
+  }
+
   return (
     <div className="h-screen bg-slate-50 font-sans flex flex-col overflow-hidden">
       <header className="bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
@@ -39,7 +62,7 @@ export default function SharedCallsView() {
             Loading database...
           </div>
         ) : (
-          <ServiceCallsTab calls={calls} brokers={brokers} readOnly={true} />
+          <ServiceCallsTab calls={calls} brokers={brokers} onSave={saveCalls} onDelete={deleteCall} readOnly={false} />
         )}
       </main>
     </div>
