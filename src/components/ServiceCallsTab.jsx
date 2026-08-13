@@ -364,8 +364,8 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete, read
             {calls.map((row, i) => (
               <tr key={row.id} className={cn('border-b border-slate-100 transition-colors hover:bg-slate-50/80', i % 2 === 0 ? 'bg-white' : 'bg-slate-50/30')}>
                 {/* Sr No */}
-                <td className="px-3 py-2">
-                  <EditableCell readOnly={readOnly} value={row.srNo} onChange={v => updateCall(row.id, 'srNo', v)} className="w-8 text-center text-slate-500" />
+                <td className="px-3 py-2 text-center text-slate-400 font-medium w-8">
+                  {i + 1}
                 </td>
                 {/* Call Date */}
                 <td className="px-3 py-2">
