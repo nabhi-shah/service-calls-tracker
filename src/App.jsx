@@ -87,7 +87,6 @@ export default function App() {
             <h1 className="text-xl font-bold text-slate-900 tracking-tight">
               Service Calls Tracker
             </h1>
-            <p className="text-sm text-slate-500 mt-0.5">servicecalls.netlify.app</p>
           </div>
 
           {/* Tabs */}
