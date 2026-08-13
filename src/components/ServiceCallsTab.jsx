@@ -244,8 +244,18 @@ function LocationSelect({ locationId, brokers, onChange, readOnly = false }) {
 }
 
 // ── Main Component ─────────────────────────────────────────
-export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
+export default function ServiceCallsTab({ calls, brokers, onSave, onDelete, readOnly = false }) {
   const idCounter = useRef(Math.max(...calls.map(c => c.id), 0) + 1)
+
+  const handleShare = async () => {
+    try {
+      const url = `${window.location.origin}/shared/calls`
+      await navigator.clipboard.writeText(url)
+      toast.success('Shareable link copied to clipboard!')
+    } catch (e) {
+      toast.error('Failed to generate link')
+    }
+  }
 
   const updateCall = useCallback((id, field, value) => {
     const next = calls.map(c => c.id === id ? { ...c, [field]: value } : c)
@@ -320,14 +330,6 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
         <div className="flex items-center gap-3">
           {!readOnly && (
             <>
-              {hasChanges && (
-                <button
-                  onClick={saveChanges}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 text-sm font-semibold rounded-lg transition-colors"
-                >
-                  <FloppyDisk size={16} /> Save to Cloud
-                </button>
-              )}
               <button
                 onClick={handleShare}
                 className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100"
