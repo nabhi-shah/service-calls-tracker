@@ -309,10 +309,10 @@ export default function LocationsTab({ brokers, onSave }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex-1 overflow-y-auto pr-1 sm:pr-2 pb-12 space-y-4 min-h-0">
       {/* Summary bar */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between flex-wrap gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
           <span className="flex items-center gap-1.5 text-sm text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
             <Buildings size={15} className="text-indigo-500" weight="fill" />
             <strong>{brokers.length}</strong> groups
@@ -328,7 +328,7 @@ export default function LocationsTab({ brokers, onSave }) {
         </div>
         <button
           onClick={() => setAddBrokerOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95 flex-1 sm:flex-none"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95 w-full sm:w-auto"
         >
           <Plus size={15} weight="bold" />
           Add Group
