@@ -389,19 +389,19 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete, read
                 </td>
                 {/* Address */}
                 <td className="px-3 py-2">
-                  <EditableCell readOnly={readOnly} value={row.address || ''} onChange={v => updateCall(row.id, 'address', v)} placeholder="Address" />
+                  <EditableCell readOnly={true} value={row.address || ''} onChange={v => updateCall(row.id, 'address', v)} placeholder="Address" className="text-slate-500 cursor-default bg-transparent hover:bg-transparent" />
                 </td>
                 {/* Broker */}
                 <td className="px-3 py-2">
-                  <EditableCell readOnly={readOnly} value={row.broker || ''} onChange={v => updateCall(row.id, 'broker', v)} placeholder="Broker" />
+                  <EditableCell readOnly={true} value={row.broker || ''} onChange={v => updateCall(row.id, 'broker', v)} placeholder="Broker" className="text-slate-500 cursor-default bg-transparent hover:bg-transparent" />
                 </td>
                 {/* Broker Contact */}
                 <td className="px-3 py-2">
-                  <EditableCell readOnly={readOnly} value={row.brokerContact || ''} onChange={v => updateCall(row.id, 'brokerContact', v)} placeholder="—" />
+                  <EditableCell readOnly={true} value={row.brokerContact || ''} onChange={v => updateCall(row.id, 'brokerContact', v)} placeholder="—" className="text-slate-500 cursor-default bg-transparent hover:bg-transparent" />
                 </td>
                 {/* Location Contact */}
                 <td className="px-3 py-2">
-                  <EditableCell readOnly={readOnly} value={row.locationContact || ''} onChange={v => updateCall(row.id, 'locationContact', v)} placeholder="—" />
+                  <EditableCell readOnly={true} value={row.locationContact || ''} onChange={v => updateCall(row.id, 'locationContact', v)} placeholder="—" className="text-slate-500 cursor-default bg-transparent hover:bg-transparent" />
                 </td>
                 {/* Resolution Date */}
                 <td className="px-3 py-2">
