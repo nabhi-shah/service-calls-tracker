@@ -1,5 +1,5 @@
+headersOrigin = "config"
 plugins = []
-headers = []
 redirects = []
 
 [functions]
@@ -7,10 +7,10 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "/Users/nabhi/DS Scrap/casino scrapper"
+publish = "/Users/nabhi/Desktop/service calls tracker/dist"
 publishOrigin = "config"
 commandOrigin = "config"
-command = "# no build command"
+command = "npm run build"
 
 [build.environment]
 
@@ -25,3 +25,10 @@ command = "# no build command"
 [build.processing.js]
 
 [build.services]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"

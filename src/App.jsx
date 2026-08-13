@@ -3,7 +3,7 @@ import { Toaster, toast } from 'sonner'
 import { ClipboardText, MapPin } from '@phosphor-icons/react'
 import ServiceCallsTab from './components/ServiceCallsTab'
 import LocationsTab from './components/LocationsTab'
-import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushLocations } from './lib/api'
+import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers } from './lib/api'
 import { INITIAL_CALLS, INITIAL_BROKERS, flatRowsToBrokers, brokersToFlatRows } from './lib/data'
 import { cn } from './lib/utils'
 
@@ -21,28 +21,21 @@ export default function App() {
   const callsTimerRef = useRef(null)
   const locTimerRef = useRef(null)
 
-  // ── Load from cloud on mount ──────────────────────────────
+  // ── Load from Supabase on mount ───────────────────────────
   useEffect(() => {
     async function load() {
-      // Load locations first (needed for dropdown)
       try {
-        const stored = localStorage.getItem('brokersData')
-        if (stored) setBrokers(JSON.parse(stored))
-        const rows = await fetchLocations()
-        if (rows) {
-          const b = flatRowsToBrokers(rows)
-          setBrokers(b)
-          localStorage.setItem('brokersData', JSON.stringify(b))
-        }
-      } catch { /* use initial */ }
+        const brokersData = await fetchLocations()
+        if (brokersData) setBrokers(brokersData)
 
-      // Load service calls
-      try {
-        const data = await fetchServiceCalls()
-        if (data && !data.error) setCalls(data)
-      } catch { /* use initial */ }
-
-      setLoading(false)
+        const callsData = await fetchServiceCalls()
+        if (callsData) setCalls(callsData)
+      } catch (err) {
+        console.error('Failed to load from Supabase:', err)
+        toast.error('Could not connect to database.')
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [])
@@ -54,9 +47,10 @@ export default function App() {
     callsTimerRef.current = setTimeout(async () => {
       try {
         await pushServiceCalls(newCalls)
-        toast.success('Saved to Google Sheets')
-      } catch {
-        toast.error('Failed to sync — changes saved locally')
+        toast.success('Saved to Database')
+      } catch (err) {
+        console.error(err)
+        toast.error('Failed to sync calls')
       }
     }, 1200)
   }, [])
@@ -64,13 +58,13 @@ export default function App() {
   // ── Save brokers (debounced) ──────────────────────────────
   const saveBrokers = useCallback((newBrokers) => {
     setBrokers(newBrokers)
-    localStorage.setItem('brokersData', JSON.stringify(newBrokers))
     if (locTimerRef.current) clearTimeout(locTimerRef.current)
     locTimerRef.current = setTimeout(async () => {
       try {
-        await pushLocations(brokersToFlatRows(newBrokers))
-        toast.success('Locations saved to Google Sheets')
-      } catch {
+        await pushBrokers(newBrokers)
+        toast.success('Locations saved to Database')
+      } catch (err) {
+        console.error(err)
         toast.error('Failed to sync locations')
       }
     }, 1200)
@@ -118,7 +112,7 @@ export default function App() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
             </svg>
-            Loading from Google Sheets…
+            Loading from Database…
           </div>
         ) : (
           <>
