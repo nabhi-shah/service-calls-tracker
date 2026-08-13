@@ -5,6 +5,7 @@ import { ClipboardText, MapPin, Lock } from '@phosphor-icons/react'
 import ServiceCallsTab from './components/ServiceCallsTab'
 import LocationsTab from './components/LocationsTab'
 import FinanceView from './components/FinanceView'
+import SharedCallsView from './components/SharedCallsView'
 import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers, deleteServiceCall } from './lib/api'
 import { INITIAL_CALLS, INITIAL_BROKERS, flatRowsToBrokers, brokersToFlatRows } from './lib/data'
 import { cn } from './lib/utils'
@@ -169,6 +170,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainApp />} />
         <Route path="/broker/:id/finance" element={<FinanceView />} />
+        <Route path="/shared/calls" element={<SharedCallsView />} />
       </Routes>
     </BrowserRouter>
   )

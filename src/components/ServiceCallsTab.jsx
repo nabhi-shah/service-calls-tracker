@@ -12,15 +12,17 @@ const STATUS_STYLES = {
 }
 
 // ── Small reusable cell components ────────────────────────
-function EditableCell({ value, onChange, className, placeholder = '' }) {
+function EditableCell({ value, onChange, className, placeholder = '', readOnly = false }) {
   return (
     <div
-      contentEditable
+      contentEditable={!readOnly}
       suppressContentEditableWarning
-      onBlur={e => onChange(e.currentTarget.innerText.trim())}
+      onBlur={e => {
+        if (!readOnly) onChange(e.currentTarget.innerText.trim())
+      }}
       className={cn(
-        'min-w-[80px] outline-none rounded px-1 py-0.5 cursor-text',
-        'hover:bg-slate-50 focus:bg-indigo-50 focus:ring-1 focus:ring-indigo-300',
+        'min-w-[80px] outline-none rounded px-1 py-0.5',
+        readOnly ? 'cursor-default' : 'cursor-text hover:bg-slate-50 focus:bg-indigo-50 focus:ring-1 focus:ring-indigo-300',
         'text-sm text-slate-800 transition-colors',
         className
       )}
@@ -31,12 +33,13 @@ function EditableCell({ value, onChange, className, placeholder = '' }) {
   )
 }
 
-function StatusBadge({ value, onChange }) {
+function StatusBadge({ value, onChange, readOnly = false }) {
   const [open, setOpen] = useState(false)
   const [dropUp, setDropUp] = useState(false)
   const ref = useRef(null)
 
   const toggle = () => {
+    if (readOnly) return
     if (!open && ref.current) {
       const rect = ref.current.getBoundingClientRect()
       setDropUp(window.innerHeight - rect.bottom < 220)
@@ -48,13 +51,15 @@ function StatusBadge({ value, onChange }) {
     <div className="relative" ref={ref}>
       <button
         onClick={toggle}
+        disabled={readOnly}
         className={cn(
           'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all w-full',
-          STATUS_STYLES[value] || STATUS_STYLES['']
+          STATUS_STYLES[value] || STATUS_STYLES[''],
+          readOnly && 'cursor-default'
         )}
       >
-        <span className="flex-1 text-left">{value || 'Set Status'}</span>
-        <CaretUpDown size={12} />
+        <span className="flex-1 text-left">{value || (readOnly ? '' : 'Set Status')}</span>
+        {!readOnly && <CaretUpDown size={12} />}
       </button>
       {open && (
         <div className={cn(
@@ -80,12 +85,13 @@ function StatusBadge({ value, onChange }) {
   )
 }
 
-function MultiSelect({ items, selected, onChange, options }) {
+function MultiSelect({ items, selected, onChange, options, readOnly = false }) {
   const [open, setOpen] = useState(false)
   const [dropUp, setDropUp] = useState(false)
   const ref = useRef(null)
 
   const toggle = () => {
+    if (readOnly) return
     if (!open && ref.current) {
       const rect = ref.current.getBoundingClientRect()
       setDropUp(window.innerHeight - rect.bottom < 280)
@@ -97,10 +103,11 @@ function MultiSelect({ items, selected, onChange, options }) {
     <div className="relative" ref={ref}>
       <button
         onClick={toggle}
-        className="flex flex-wrap gap-1 min-w-[140px] text-left p-1 rounded hover:bg-slate-50 transition-colors"
+        disabled={readOnly}
+        className={cn("flex flex-wrap gap-1 min-w-[140px] text-left p-1 rounded transition-colors", !readOnly && "hover:bg-slate-50")}
       >
         {selected.length === 0
-          ? <span className="text-xs text-slate-400 px-1">Select…</span>
+          ? <span className="text-xs text-slate-400 px-1">{readOnly ? '' : 'Select…'}</span>
           : selected.map(s => (
               <span key={s} className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">{s}</span>
             ))
@@ -144,16 +151,20 @@ function MultiSelect({ items, selected, onChange, options }) {
   )
 }
 
-function LocationSelect({ locationId, brokers, onChange }) {
+function LocationSelect({ locationId, brokers, onChange, readOnly = false }) {
   const [open, setOpen] = useState(false)
   const [dropUp, setDropUp] = useState(false)
   const ref = useRef(null)
   const [search, setSearch] = useState('')
+  
+  const selectedBroker = brokers.find(b => b.locations?.some(l => l.id === locationId))
+  const selectedLocation = selectedBroker?.locations?.find(l => l.id === locationId)
 
   const toggle = () => {
+    if (readOnly) return
     if (!open && ref.current) {
       const rect = ref.current.getBoundingClientRect()
-      setDropUp(window.innerHeight - rect.bottom < 350)
+      setDropUp(window.innerHeight - rect.bottom < 300)
     }
     setOpen(o => !o)
   }
@@ -305,13 +316,33 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
             {calls.filter(c => c.status === 'Complete').length} resolved
           </span>
         </div>
-        <button
-          onClick={addRow}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95"
-        >
-          <Plus size={15} weight="bold" />
-          Add Row
-        </button>
+        <div className="flex items-center gap-3">
+          {!readOnly && (
+            <>
+              {hasChanges && (
+                <button
+                  onClick={saveChanges}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 text-sm font-semibold rounded-lg transition-colors"
+                >
+                  <FloppyDisk size={16} /> Save to Cloud
+                </button>
+              )}
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100"
+              >
+                Share Link
+              </button>
+              <button
+                onClick={addRow}
+                className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95"
+              >
+                <Plus size={15} weight="bold" />
+                Add Row
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Table */}
@@ -331,20 +362,23 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
               <tr key={row.id} className={cn('border-b border-slate-100 transition-colors hover:bg-slate-50/80', i % 2 === 0 ? 'bg-white' : 'bg-slate-50/30')}>
                 {/* Sr No */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.srNo} onChange={v => updateCall(row.id, 'srNo', v)} className="w-8 text-center text-slate-500" />
+                  <EditableCell readOnly={readOnly} value={row.srNo} onChange={v => updateCall(row.id, 'srNo', v)} className="w-8 text-center text-slate-500" />
                 </td>
                 {/* Call Date */}
                 <td className="px-3 py-2">
                   <input
                     type="date"
+                    readOnly={readOnly}
+                    disabled={readOnly}
                     value={row.callDate || ''}
                     onChange={e => updateCall(row.id, 'callDate', e.target.value)}
-                    className="text-sm border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-indigo-400 bg-white w-full"
+                    className="text-sm border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-indigo-400 bg-white w-full disabled:bg-slate-50 disabled:text-slate-500"
                   />
                 </td>
                 {/* Location Dropdown */}
                 <td className="px-3 py-2">
                   <LocationSelect
+                    readOnly={readOnly}
                     locationId={row.locationId}
                     brokers={brokers}
                     onChange={(locId, loc, broker) => onLocationChange(row.id, locId, loc, broker)}
@@ -352,40 +386,43 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
                 </td>
                 {/* Address */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.address || ''} onChange={v => updateCall(row.id, 'address', v)} placeholder="Address" />
+                  <EditableCell readOnly={readOnly} value={row.address || ''} onChange={v => updateCall(row.id, 'address', v)} placeholder="Address" />
                 </td>
                 {/* Broker */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.broker || ''} onChange={v => updateCall(row.id, 'broker', v)} placeholder="Broker" />
+                  <EditableCell readOnly={readOnly} value={row.broker || ''} onChange={v => updateCall(row.id, 'broker', v)} placeholder="Broker" />
                 </td>
                 {/* Broker Contact */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.brokerContact || ''} onChange={v => updateCall(row.id, 'brokerContact', v)} placeholder="—" />
+                  <EditableCell readOnly={readOnly} value={row.brokerContact || ''} onChange={v => updateCall(row.id, 'brokerContact', v)} placeholder="—" />
                 </td>
                 {/* Location Contact */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.locationContact || ''} onChange={v => updateCall(row.id, 'locationContact', v)} placeholder="—" />
+                  <EditableCell readOnly={readOnly} value={row.locationContact || ''} onChange={v => updateCall(row.id, 'locationContact', v)} placeholder="—" />
                 </td>
                 {/* Resolution Date */}
                 <td className="px-3 py-2">
                   <input
                     type="date"
+                    readOnly={readOnly}
+                    disabled={readOnly}
                     value={row.resolutionDate || ''}
                     onChange={e => updateCall(row.id, 'resolutionDate', e.target.value)}
-                    className="text-sm border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-indigo-400 bg-white w-full"
+                    className="text-sm border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-indigo-400 bg-white w-full disabled:bg-slate-50 disabled:text-slate-500"
                   />
                 </td>
                 {/* Resolution Notes */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.resolutionNotes || ''} onChange={v => updateCall(row.id, 'resolutionNotes', v)} placeholder="Notes…" className="min-w-[180px]" />
+                  <EditableCell readOnly={readOnly} value={row.resolutionNotes || ''} onChange={v => updateCall(row.id, 'resolutionNotes', v)} placeholder="Notes…" className="min-w-[180px]" />
                 </td>
                 {/* Status */}
                 <td className="px-3 py-2">
-                  <StatusBadge value={row.status} onChange={v => updateCall(row.id, 'status', v)} />
+                  <StatusBadge readOnly={readOnly} value={row.status} onChange={v => updateCall(row.id, 'status', v)} />
                 </td>
                 {/* Parts */}
                 <td className="px-3 py-2">
                   <MultiSelect
+                    readOnly={readOnly}
                     selected={row.parts || []}
                     options={MOCK_PARTS}
                     onChange={v => updateCall(row.id, 'parts', v)}
@@ -394,6 +431,7 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
                 {/* Machine */}
                 <td className="px-3 py-2">
                   <MultiSelect
+                    readOnly={readOnly}
                     selected={row.machine || []}
                     options={MOCK_MACHINES}
                     onChange={v => updateCall(row.id, 'machine', v)}
@@ -401,17 +439,19 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete }) {
                 </td>
                 {/* Notes */}
                 <td className="px-3 py-2">
-                  <EditableCell value={row.notes || ''} onChange={v => updateCall(row.id, 'notes', v)} placeholder="Notes…" className="min-w-[160px]" />
+                  <EditableCell readOnly={readOnly} value={row.notes || ''} onChange={v => updateCall(row.id, 'notes', v)} placeholder="Notes…" className="min-w-[160px]" />
                 </td>
                 {/* Actions */}
                 <td className="px-3 py-2 text-center">
-                  <button
-                    onClick={() => deleteRow(row.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-                    title="Delete row"
-                  >
-                    <Trash size={16} />
-                  </button>
+                  {!readOnly && (
+                    <button
+                      onClick={() => deleteRow(row.id)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                      title="Delete row"
+                    >
+                      <Trash size={16} />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
