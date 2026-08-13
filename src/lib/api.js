@@ -73,13 +73,24 @@ export async function fetchBrokerServiceCalls(brokerId) {
 export async function insertBrokerServiceCall(callFrontend) {
   const dbCall = mapCallToDb(callFrontend)
   delete dbCall.id
+  
+  // Clean up undefined keys that might trip up Supabase
+  Object.keys(dbCall).forEach(key => {
+    if (dbCall[key] === undefined) {
+      delete dbCall[key]
+    }
+  })
+
   const { data, error } = await supabase
     .from('service_calls')
-    .insert(dbCall)
+    .insert([dbCall])
     .select()
     .single()
   
-  if (error) throw error
+  if (error) {
+    console.error('Supabase Insert Error:', error)
+    throw error
+  }
   return data
 }
 
