@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchServiceCalls, fetchLocations, pushServiceCalls, deleteServiceCall } from '../lib/api'
+import { fetchServiceCalls, fetchLocations, pushServiceCalls, deleteServiceCall, supabase } from '../lib/api'
 import ServiceCallsTab from './ServiceCallsTab'
 import { ClipboardText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
@@ -22,6 +22,17 @@ export default function SharedCallsView() {
       }
     }
     load()
+
+    const channel = supabase
+      .channel('public:shared')
+      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+        load()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   const saveCalls = async (updated) => {

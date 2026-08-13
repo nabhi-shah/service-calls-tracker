@@ -6,7 +6,7 @@ import ServiceCallsTab from './components/ServiceCallsTab'
 import LocationsTab from './components/LocationsTab'
 import FinanceView from './components/FinanceView'
 import SharedCallsView from './components/SharedCallsView'
-import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers, deleteServiceCall } from './lib/api'
+import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers, deleteServiceCall, supabase } from './lib/api'
 import { INITIAL_CALLS, INITIAL_BROKERS, flatRowsToBrokers, brokersToFlatRows } from './lib/data'
 import { cn } from './lib/utils'
 
@@ -37,6 +37,17 @@ function MainApp() {
       }
     }
     loadData()
+
+    const channel = supabase
+      .channel('public:all')
+      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+        loadData()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   const saveCalls = async (updated) => {
