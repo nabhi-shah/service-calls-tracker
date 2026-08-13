@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, PencilSimple, Trash, Phone, Buildings, MapPin, CaretDown, CaretRight, CurrencyDollar } from '@phosphor-icons/react'
+import { Plus, PencilSimple, Trash, Phone, Buildings, MapPin, CaretDown, CaretRight, CurrencyDollar, Lightning } from '@phosphor-icons/react'
 import { Link } from 'react-router-dom'
 import { Drawer } from 'vaul'
 import { cn } from '../lib/utils'
@@ -304,7 +304,7 @@ export default function LocationsTab({ brokers, onSave }) {
             <strong>{totalLocs}</strong> locations
           </span>
           <span className="flex items-center gap-1.5 text-sm text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
-            <span className="text-emerald-500 font-bold">⚡</span>
+            <Lightning size={16} weight="fill" className="text-amber-500" />
             <strong>{totalCoams}</strong> total COAMs
           </span>
         </div>
