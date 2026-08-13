@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Plus, PencilSimple, Trash, Phone, Buildings, MapPin, CaretDown, CaretRight } from '@phosphor-icons/react'
+import { Plus, PencilSimple, Trash, Phone, Buildings, MapPin, CaretDown, CaretRight, CurrencyDollar } from '@phosphor-icons/react'
+import { Link } from 'react-router-dom'
 import { Drawer } from 'vaul'
 import { cn } from '../lib/utils'
 
@@ -163,6 +164,14 @@ function BrokerCard({ broker, onUpdate, onDelete, onAddLocation, onDeleteLocatio
           <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full">
             {totalCoams} COAMs
           </span>
+          <Link
+            to={`/broker/${broker.id}/finance`}
+            onClick={e => e.stopPropagation()}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-green-600 hover:bg-green-50 transition-colors ml-2"
+            title="View Finances"
+          >
+            <CurrencyDollar size={16} weight="bold" />
+          </Link>
           <button
             onClick={e => { e.stopPropagation(); setEditDrawer(true) }}
             className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"

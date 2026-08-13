@@ -69,18 +69,19 @@ export async function fetchLocations() {
   if (brokerError) throw brokerError
   return brokers.map(b => ({
     id: b.id, name: b.name, phone: b.phone || '',
+    pin: b.pin || null, shareToken: b.share_token || null,
     locations: (b.locations || []).map(mapLocToFrontend).sort((a, b) => a.id - b.id)
   }))
 }
 
 export async function pushBrokers(brokers) {
   for (const broker of brokers) {
-    const { locations, ...brokerData } = broker
+    const { locations, pin, shareToken, ...brokerData } = broker
     
     // Upsert broker
     const { data: savedBroker, error: bError } = await supabase
       .from('brokers')
-      .upsert(brokerData, { onConflict: 'id' })
+      .upsert({ ...brokerData, pin, share_token: shareToken }, { onConflict: 'id' })
       .select()
       .single()
 
@@ -106,5 +107,25 @@ export async function deleteBroker(id) {
 
 export async function deleteLocation(id) {
   const { error } = await supabase.from('locations').delete().eq('id', id)
+  if (error) throw error
+}
+
+// ── Finances ──────────────────────────────────────────────
+export async function fetchFinances(brokerId) {
+  const { data, error } = await supabase
+    .from('finances')
+    .select('*')
+    .eq('broker_id', brokerId)
+  
+  if (error) throw error
+  return data
+}
+
+export async function updateBrokerAuth(brokerId, pin, shareToken) {
+  const { error } = await supabase
+    .from('brokers')
+    .update({ pin, share_token: shareToken })
+    .eq('id', brokerId)
+  
   if (error) throw error
 }

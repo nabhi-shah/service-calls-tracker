@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 import { ClipboardText, MapPin } from '@phosphor-icons/react'
 import ServiceCallsTab from './components/ServiceCallsTab'
 import LocationsTab from './components/LocationsTab'
+import FinanceView from './components/FinanceView'
 import { fetchServiceCalls, pushServiceCalls, fetchLocations, pushBrokers } from './lib/api'
 import { INITIAL_CALLS, INITIAL_BROKERS, flatRowsToBrokers, brokersToFlatRows } from './lib/data'
 import { cn } from './lib/utils'
@@ -12,24 +14,18 @@ const TABS = [
   { id: 'locations', label: 'Locations DB', Icon: MapPin },
 ]
 
-export default function App() {
+function MainApp() {
   const [activeTab, setActiveTab] = useState('calls')
-  const [calls, setCalls] = useState(INITIAL_CALLS)
-  const [brokers, setBrokers] = useState(INITIAL_BROKERS)
+  const [calls, setCalls] = useState([])
+  const [brokers, setBrokers] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const callsTimerRef = useRef(null)
-  const locTimerRef = useRef(null)
-
-  // ── Load from Supabase on mount ───────────────────────────
   useEffect(() => {
-    async function load() {
+    async function loadData() {
       try {
-        const brokersData = await fetchLocations()
-        if (brokersData) setBrokers(brokersData)
-
-        const callsData = await fetchServiceCalls()
-        if (callsData) setCalls(callsData)
+        const [cData, bData] = await Promise.all([fetchServiceCalls(), fetchLocations()])
+        setCalls(cData || [])
+        setBrokers(bData || [])
       } catch (err) {
         console.error('Failed to load from Supabase:', err)
         toast.error('Could not connect to database.')
@@ -37,44 +33,33 @@ export default function App() {
         setLoading(false)
       }
     }
-    load()
+    loadData()
   }, [])
 
-  // ── Save calls (debounced) ────────────────────────────────
-  const saveCalls = useCallback((newCalls) => {
-    setCalls(newCalls)
-    if (callsTimerRef.current) clearTimeout(callsTimerRef.current)
-    callsTimerRef.current = setTimeout(async () => {
-      try {
-        await pushServiceCalls(newCalls)
-        toast.success('Saved to Database')
-      } catch (err) {
-        console.error(err)
-        toast.error('Failed to sync calls')
-      }
-    }, 1200)
-  }, [])
+  const saveCalls = async (updated) => {
+    setCalls(updated)
+    try {
+      await pushServiceCalls(updated)
+      toast.success('Service calls saved to Supabase!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to save to Supabase.')
+    }
+  }
 
-  // ── Save brokers (debounced) ──────────────────────────────
-  const saveBrokers = useCallback((newBrokers) => {
-    setBrokers(newBrokers)
-    if (locTimerRef.current) clearTimeout(locTimerRef.current)
-    locTimerRef.current = setTimeout(async () => {
-      try {
-        await pushBrokers(newBrokers)
-        toast.success('Locations saved to Database')
-      } catch (err) {
-        console.error(err)
-        toast.error('Failed to sync locations')
-      }
-    }, 1200)
-  }, [])
+  const saveBrokers = async (updated) => {
+    setBrokers([...updated])
+    try {
+      await pushBrokers(updated)
+      toast.success('Brokers & locations saved to Supabase!')
+    } catch (e) {
+      console.error(e)
+      toast.error('Failed to save brokers.')
+    }
+  }
 
   return (
     <div className="h-screen bg-slate-50 font-sans flex flex-col overflow-hidden">
-      <Toaster position="bottom-right" richColors closeButton />
-
-      {/* ── Header ───────────────────────────────────────── */}
       <header className="bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
         <div className="max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between gap-6 flex-wrap">
           <div>
@@ -83,7 +68,6 @@ export default function App() {
             </h1>
           </div>
 
-          {/* Tabs */}
           <nav className="flex gap-2">
             {TABS.map(({ id, label, Icon }) => (
               <button
@@ -104,7 +88,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* ── Content ──────────────────────────────────────── */}
       <main className="max-w-[1600px] w-full mx-auto px-6 py-6 flex-1 flex flex-col overflow-hidden min-h-0">
         {loading ? (
           <div className="flex items-center justify-center h-full text-slate-400 text-sm gap-3">
@@ -128,5 +111,17 @@ export default function App() {
         )}
       </main>
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Toaster position="bottom-right" richColors closeButton />
+      <Routes>
+        <Route path="/" element={<MainApp />} />
+        <Route path="/broker/:id/finance" element={<FinanceView />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
