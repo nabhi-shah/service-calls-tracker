@@ -62,7 +62,7 @@ function MainApp() {
 
   const handleAuth = (e) => {
     e.preventDefault()
-    if (pinInput === '1234') {
+    if (pinInput === '7496') {
       setAuth(true)
       localStorage.setItem('adminAuth', 'true')
     } else {
