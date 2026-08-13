@@ -217,6 +217,14 @@ export default function FinanceView() {
     )
   }
 
+  const getWeekRange = (year, monthIdx, weekIdx) => {
+    const ranges = ["1st-7th", "8th-14th", "15th-21st", "22nd-28th"]
+    if (weekIdx < 4) return ranges[weekIdx]
+    const lastDay = new Date(year, monthIdx + 1, 0).getDate()
+    if (lastDay < 29) return "N/A"
+    return `29th-${lastDay}th`
+  }
+
   const renderMonthView = (monthIdx) => {
     const monthStr = getMonthStr(monthIdx)
     return (
@@ -226,9 +234,12 @@ export default function FinanceView() {
             <tr>
               <th className="px-6 py-4 border-r border-b border-slate-200 sticky left-0 bg-slate-50 z-10">Location</th>
               {WEEKS.map((w, i) => (
-                <th key={w} className="px-4 py-4 border-r border-b border-slate-200 text-right">Week {i+1}</th>
+                <th key={w} className="px-4 py-4 border-r border-b border-slate-200 text-center">
+                  <div className="text-slate-400 mb-0.5 text-[10px]">Week {i+1}</div>
+                  <div className="text-slate-800">{getWeekRange(selectedYear, monthIdx, i)}</div>
+                </th>
               ))}
-              <th className="px-6 py-4 text-right text-indigo-700 bg-indigo-50/50 border-b border-slate-200">Month Total</th>
+              <th className="px-6 py-4 text-right text-indigo-700 bg-indigo-50/50 border-b border-slate-200 align-bottom">Month Total</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
