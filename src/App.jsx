@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
-import { ClipboardText, MapPin } from '@phosphor-icons/react'
+import { ClipboardText, MapPin, Lock } from '@phosphor-icons/react'
 import ServiceCallsTab from './components/ServiceCallsTab'
 import LocationsTab from './components/LocationsTab'
 import FinanceView from './components/FinanceView'
@@ -19,6 +19,8 @@ function MainApp() {
   const [calls, setCalls] = useState([])
   const [brokers, setBrokers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [auth, setAuth] = useState(false)
+  const [pinInput, setPinInput] = useState('')
 
   useEffect(() => {
     async function loadData() {
@@ -56,6 +58,41 @@ function MainApp() {
       console.error(e)
       toast.error('Failed to save brokers.')
     }
+  }
+
+  const handleAuth = (e) => {
+    e.preventDefault()
+    if (pinInput === '1234') {
+      setAuth(true)
+    } else {
+      toast.error('Incorrect Admin PIN')
+      setPinInput('')
+    }
+  }
+
+  if (!auth) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-50">
+        <form onSubmit={handleAuth} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-sm w-full text-center">
+          <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock size={24} weight="fill" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Admin Login</h2>
+          <p className="text-sm text-slate-500 mb-6">Enter Admin PIN to view dashboard.</p>
+          <input
+            type="password"
+            autoFocus
+            value={pinInput}
+            onChange={e => setPinInput(e.target.value)}
+            placeholder="Enter PIN"
+            className="w-full text-center text-2xl tracking-widest px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 mb-4"
+          />
+          <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors">
+            Unlock Dashboard
+          </button>
+        </form>
+      </div>
+    )
   }
 
   return (
