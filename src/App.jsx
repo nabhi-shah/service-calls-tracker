@@ -105,19 +105,18 @@ function MainApp() {
             </h1>
           </div>
 
-          <nav className="flex gap-2">
+          <nav className="flex bg-slate-100 p-1 rounded-lg">
             {TABS.map(({ id, label, Icon }) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all duration-200',
+                  'flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-md transition-colors',
                   activeTab === id
-                    ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200'
-                    : 'border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 bg-white'
+                    ? 'bg-white text-indigo-700 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
                 )}
               >
-                <Icon size={16} weight={activeTab === id ? 'fill' : 'regular'} />
                 {label}
               </button>
             ))}
