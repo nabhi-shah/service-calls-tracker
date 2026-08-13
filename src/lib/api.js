@@ -59,6 +59,30 @@ export async function deleteServiceCall(id) {
   if (error) throw error
 }
 
+export async function fetchBrokerServiceCalls(brokerId) {
+  const { data, error } = await supabase
+    .from('service_calls')
+    .select('*, locations!inner(*, brokers(*))')
+    .eq('locations.broker_id', brokerId)
+    .order('id', { ascending: false })
+  
+  if (error) throw error
+  return data.map(mapCallToFrontend)
+}
+
+export async function insertBrokerServiceCall(callFrontend) {
+  const dbCall = mapCallToDb(callFrontend)
+  delete dbCall.id
+  const { data, error } = await supabase
+    .from('service_calls')
+    .insert(dbCall)
+    .select()
+    .single()
+  
+  if (error) throw error
+  return data
+}
+
 // ── Brokers & Locations ───────────────────────────────────
 export async function fetchLocations() {
   const { data: brokers, error: brokerError } = await supabase

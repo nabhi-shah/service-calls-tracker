@@ -5,6 +5,7 @@ import { Lock, ArrowLeft, ShareNetwork, CalendarBlank } from '@phosphor-icons/re
 import { toast } from 'sonner'
 import { v4 as uuidv4 } from 'uuid'
 import { cn } from '../lib/utils'
+import BrokerServiceCalls from './BrokerServiceCalls'
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const WEEKS = ['w1', 'w2', 'w3', 'w4', 'w5']
@@ -41,6 +42,7 @@ export default function FinanceView() {
   const currentYear = new Date().getFullYear()
   const [selectedYear, setSelectedYear] = useState(Math.max(2026, currentYear))
   const [activeTab, setActiveTab] = useState('YTD') // 'YTD' or month index 0-11
+  const [mainTab, setMainTab] = useState('finance') // 'finance' or 'service'
 
   // Dynamic years list from 2026 to currentYear + 1
   const years = Array.from({ length: Math.max(2, (currentYear + 2) - 2026) }, (_, i) => 2026 + i)
@@ -298,7 +300,21 @@ export default function FinanceView() {
               <ArrowLeft size={20} weight="bold" />
             </Link>
           )}
-          <h1 className="text-xl font-bold text-slate-900">{broker.name} - Finance Report</h1>
+          <h1 className="text-xl font-bold text-slate-900 mr-4">{broker.name}</h1>
+          <div className="flex bg-slate-100 p-1 rounded-lg">
+            <button
+              onClick={() => setMainTab('finance')}
+              className={cn("px-4 py-1.5 text-sm font-semibold rounded-md transition-colors", mainTab === 'finance' ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600 hover:text-slate-900")}
+            >
+              Finances
+            </button>
+            <button
+              onClick={() => setMainTab('service')}
+              className={cn("px-4 py-1.5 text-sm font-semibold rounded-md transition-colors", mainTab === 'service' ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600 hover:text-slate-900")}
+            >
+              Service Calls
+            </button>
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -323,7 +339,8 @@ export default function FinanceView() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-auto p-6">
+      {mainTab === 'finance' ? (
+        <main className="flex-1 overflow-auto p-6">
         <div className="flex space-x-1 mb-0 border-b border-slate-200 pb-[1px]">
           <button
             onClick={() => setActiveTab('YTD')}
@@ -355,7 +372,12 @@ export default function FinanceView() {
         <div className="overflow-x-auto pb-8 pt-0">
           {activeTab === 'YTD' ? renderYtdView() : renderMonthView(activeTab)}
         </div>
-      </main>
+        </main>
+      ) : (
+        <main className="flex-1 overflow-auto">
+          <BrokerServiceCalls broker={broker} />
+        </main>
+      )}
     </div>
   )
 }
