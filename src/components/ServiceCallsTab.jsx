@@ -319,26 +319,26 @@ export default function ServiceCallsTab({ calls, brokers, onSave, onDelete, read
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex-1 flex flex-col min-h-0">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex-shrink-0">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-3 py-2 sm:px-5 sm:py-3 border-b border-slate-100 bg-slate-50/50 gap-3 flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3">
           <span className="text-sm font-semibold text-slate-700">{calls.length} calls</span>
           <span className="text-slate-300">|</span>
           <span className="text-sm text-slate-500">
             {calls.filter(c => c.status === 'Complete').length} resolved
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           {!readOnly && (
             <>
               <button
                 onClick={handleShare}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100"
+                className="flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100 flex-1 sm:flex-none"
               >
                 Share Link
               </button>
               <button
                 onClick={addRow}
-                className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95"
+                className="flex items-center justify-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95 flex-1 sm:flex-none"
               >
                 <Plus size={15} weight="bold" />
                 Add Row

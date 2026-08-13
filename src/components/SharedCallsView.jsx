@@ -49,14 +49,14 @@ export default function SharedCallsView() {
   return (
     <div className="h-screen bg-slate-50 font-sans flex flex-col overflow-hidden">
       <header className="bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
-        <div className="max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-3 py-2 sm:px-6 sm:py-4 flex flex-col sm:flex-row items-center sm:justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-slate-900">
             <ClipboardText size={24} weight="bold" className="text-indigo-600" />
-            <h1 className="text-xl font-bold tracking-tight">Service Calls Tracker (Shared View)</h1>
+            <h1 className="text-xl font-bold tracking-tight text-center sm:text-left">Service Calls Tracker (Shared View)</h1>
           </div>
         </div>
       </header>
-      <main className="max-w-[1600px] w-full mx-auto px-6 py-6 flex-1 flex flex-col overflow-hidden min-h-0">
+      <main className="max-w-[1600px] w-full mx-auto px-2 py-3 sm:px-6 sm:py-6 flex-1 flex flex-col overflow-hidden min-h-0">
         {loading ? (
           <div className="flex items-center justify-center h-full text-slate-400 text-sm gap-3">
             Loading database...

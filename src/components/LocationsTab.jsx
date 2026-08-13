@@ -142,11 +142,11 @@ function BrokerCard({ broker, onUpdate, onDelete, onAddLocation, onDeleteLocatio
   return (
     <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       {/* Header */}
-      <div
-        className="flex items-center justify-between px-4 py-3 bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors select-none"
-        onClick={() => setOpen(o => !o)}
+      <div 
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 p-3 sm:p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+        onClick={() => setOpen(!open)}
       >
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <div className="p-1.5 bg-indigo-100 rounded-lg">
             <Buildings size={16} className="text-indigo-600" weight="fill" />
           </div>
@@ -310,7 +310,7 @@ export default function LocationsTab({ brokers, onSave }) {
         </div>
         <button
           onClick={() => setAddBrokerOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95"
+          className="flex items-center justify-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm shadow-indigo-200 transition-all active:scale-95 flex-1 sm:flex-none"
         >
           <Plus size={15} weight="bold" />
           Add Group
