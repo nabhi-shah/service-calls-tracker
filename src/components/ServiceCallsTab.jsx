@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import { Plus, Trash, FloppyDisk, CaretUpDown, Check, X } from '@phosphor-icons/react'
 import { STATUSES, MOCK_PARTS, MOCK_MACHINES } from '../lib/data'
 import { cn } from '../lib/utils'
+import { toast } from 'sonner'
 
 const STATUS_STYLES = {
   'Pending':       'bg-amber-100 text-amber-800 border-amber-200',
