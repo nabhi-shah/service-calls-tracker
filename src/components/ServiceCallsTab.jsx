@@ -33,10 +33,21 @@ function EditableCell({ value, onChange, className, placeholder = '' }) {
 
 function StatusBadge({ value, onChange }) {
   const [open, setOpen] = useState(false)
+  const [dropUp, setDropUp] = useState(false)
+  const ref = useRef(null)
+
+  const toggle = () => {
+    if (!open && ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      setDropUp(window.innerHeight - rect.bottom < 220)
+    }
+    setOpen(o => !o)
+  }
+
   return (
-    <div className="relative">
+    <div className="relative" ref={ref}>
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={toggle}
         className={cn(
           'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all w-full',
           STATUS_STYLES[value] || STATUS_STYLES['']
@@ -46,7 +57,10 @@ function StatusBadge({ value, onChange }) {
         <CaretUpDown size={12} />
       </button>
       {open && (
-        <div className="absolute z-50 top-full mt-1 left-0 bg-white rounded-lg shadow-lg border border-slate-200 py-1 min-w-[160px]">
+        <div className={cn(
+          "absolute z-50 left-0 bg-white rounded-lg shadow-lg border border-slate-200 py-1 min-w-[160px]",
+          dropUp ? "bottom-full mb-1" : "top-full mt-1"
+        )}>
           {STATUSES.map(s => (
             <button
               key={s}
@@ -68,12 +82,21 @@ function StatusBadge({ value, onChange }) {
 
 function MultiSelect({ items, selected, onChange, options }) {
   const [open, setOpen] = useState(false)
+  const [dropUp, setDropUp] = useState(false)
   const ref = useRef(null)
+
+  const toggle = () => {
+    if (!open && ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      setDropUp(window.innerHeight - rect.bottom < 280)
+    }
+    setOpen(o => !o)
+  }
 
   return (
     <div className="relative" ref={ref}>
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={toggle}
         className="flex flex-wrap gap-1 min-w-[140px] text-left p-1 rounded hover:bg-slate-50 transition-colors"
       >
         {selected.length === 0
@@ -84,7 +107,10 @@ function MultiSelect({ items, selected, onChange, options }) {
         }
       </button>
       {open && (
-        <div className="absolute z-50 top-full mt-1 left-0 bg-white rounded-lg shadow-xl border border-slate-200 py-1 min-w-[200px] max-h-60 overflow-y-auto">
+        <div className={cn(
+          "absolute z-50 left-0 bg-white rounded-lg shadow-xl border border-slate-200 py-1 min-w-[200px] max-h-60 overflow-y-auto",
+          dropUp ? "bottom-full mb-1" : "top-full mt-1"
+        )}>
           {options.map(opt => {
             const checked = selected.includes(opt)
             return (
@@ -120,7 +146,17 @@ function MultiSelect({ items, selected, onChange, options }) {
 
 function LocationSelect({ locationId, brokers, onChange }) {
   const [open, setOpen] = useState(false)
+  const [dropUp, setDropUp] = useState(false)
+  const ref = useRef(null)
   const [search, setSearch] = useState('')
+
+  const toggle = () => {
+    if (!open && ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      setDropUp(window.innerHeight - rect.bottom < 350)
+    }
+    setOpen(o => !o)
+  }
 
   const filtered = brokers.map(b => ({
     ...b,
@@ -138,9 +174,9 @@ function LocationSelect({ locationId, brokers, onChange }) {
   }
 
   return (
-    <div className="relative min-w-[200px]">
+    <div className="relative min-w-[200px]" ref={ref}>
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={toggle}
         className={cn(
           'w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg border text-sm transition-all text-left',
           open ? 'border-indigo-400 bg-indigo-50' : 'border-slate-200 bg-white hover:border-indigo-300'
@@ -150,7 +186,10 @@ function LocationSelect({ locationId, brokers, onChange }) {
         <CaretUpDown size={13} className="text-slate-400 flex-shrink-0" />
       </button>
       {open && (
-        <div className="absolute z-50 top-full mt-1 left-0 bg-white rounded-xl shadow-xl border border-slate-200 w-72">
+        <div className={cn(
+          "absolute z-50 left-0 bg-white rounded-xl shadow-xl border border-slate-200 w-72",
+          dropUp ? "bottom-full mb-1" : "top-full mt-1"
+        )}>
           <div className="p-2 border-b border-slate-100">
             <input
               autoFocus
@@ -271,7 +310,7 @@ export default function ServiceCallsTab({ calls, brokers, onSave }) {
       </div>
 
       {/* Table */}
-      <div className="flex-1 overflow-auto pb-64 relative">
+      <div className="flex-1 overflow-auto relative">
         <table className="w-full border-collapse text-sm">
           <thead className="sticky top-0 z-20 bg-slate-50">
             <tr className="border-b border-slate-200">
