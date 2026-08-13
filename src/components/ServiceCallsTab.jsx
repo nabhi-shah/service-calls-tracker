@@ -234,20 +234,20 @@ export default function ServiceCallsTab({ calls, brokers, onSave }) {
   }
 
   const cols = [
-    { key: 'srNo',            label: '#',                w: 'w-12' },
-    { key: 'callDate',        label: 'Call Date',        w: 'w-40' },
-    { key: 'callLocation',    label: 'Location',         w: 'w-64' },
-    { key: 'address',         label: 'Address',          w: 'w-64' },
-    { key: 'broker',          label: 'Broker',           w: 'w-56' },
-    { key: 'brokerContact',   label: 'Broker Contact',   w: 'w-40' },
-    { key: 'locationContact', label: 'Loc. Contact',     w: 'w-40' },
-    { key: 'resolutionDate',  label: 'Resolution Date',  w: 'w-40' },
-    { key: 'resolutionNotes', label: 'Resolution Notes', w: 'w-72' },
-    { key: 'status',          label: 'Status',           w: 'w-48' },
-    { key: 'parts',           label: 'Parts',            w: 'w-64' },
-    { key: 'machine',         label: 'Machine',          w: 'w-64' },
-    { key: 'notes',           label: 'Notes',            w: 'w-72' },
-    { key: '_actions',        label: '',                 w: 'w-12' },
+    { key: 'srNo',            label: '#',                w: 'min-w-[40px]' },
+    { key: 'callDate',        label: 'Call Date',        w: 'min-w-[140px]' },
+    { key: 'callLocation',    label: 'Location',         w: 'min-w-[220px]' },
+    { key: 'address',         label: 'Address',          w: 'min-w-[240px]' },
+    { key: 'broker',          label: 'Broker',           w: 'min-w-[200px]' },
+    { key: 'brokerContact',   label: 'Broker Contact',   w: 'min-w-[140px]' },
+    { key: 'locationContact', label: 'Loc. Contact',     w: 'min-w-[140px]' },
+    { key: 'resolutionDate',  label: 'Resolution Date',  w: 'min-w-[140px]' },
+    { key: 'resolutionNotes', label: 'Resolution Notes', w: 'min-w-[240px]' },
+    { key: 'status',          label: 'Status',           w: 'min-w-[160px]' },
+    { key: 'parts',           label: 'Parts',            w: 'min-w-[200px]' },
+    { key: 'machine',         label: 'Machine',          w: 'min-w-[200px]' },
+    { key: 'notes',           label: 'Notes',            w: 'min-w-[240px]' },
+    { key: '_actions',        label: '',                 w: 'min-w-[50px]' },
   ]
 
   return (
