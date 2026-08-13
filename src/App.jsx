@@ -73,11 +73,11 @@ function MainApp() {
 
   const handleAuth = (e) => {
     e.preventDefault()
-    if (pinInput === '1234') {
+    if (pinInput === 'ML#15284') {
       setAuth(true)
       localStorage.setItem('adminAuth', 'true')
     } else {
-      toast.error('Incorrect Admin PIN')
+      toast.error('Incorrect Admin Password')
       setPinInput('')
     }
   }
@@ -90,13 +90,13 @@ function MainApp() {
             <Lock size={24} weight="fill" />
           </div>
           <h2 className="text-xl font-bold text-slate-900 mb-2">Admin Login</h2>
-          <p className="text-sm text-slate-500 mb-6">Enter Admin PIN to view dashboard.</p>
+          <p className="text-sm text-slate-500 mb-6">Enter Admin Password to view dashboard.</p>
           <input
             type="password"
             autoFocus
             value={pinInput}
             onChange={e => setPinInput(e.target.value)}
-            placeholder="Enter PIN"
+            placeholder="Enter Password"
             className="w-full text-center text-2xl tracking-widest px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 mb-4"
           />
           <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors">
