@@ -77,19 +77,6 @@ export default function FinanceView() {
     }
   }
 
-  const handleSetPin = async () => {
-    const newPin = prompt('Enter a new 4-digit PIN for this broker:')
-    if (newPin) {
-      try {
-        await updateBrokerAuth(brokerId, newPin, broker.shareToken)
-        setBroker({ ...broker, pin: newPin })
-        toast.success('PIN updated!')
-      } catch (e) {
-        toast.error('Failed to update PIN')
-      }
-    }
-  }
-
   if (loading) return <div className="p-8 text-center text-slate-500">Loading...</div>
   if (!broker) return <div className="p-8 text-center text-red-500">Broker not found</div>
 
@@ -150,9 +137,6 @@ export default function FinanceView() {
           <h1 className="text-xl font-bold text-slate-900">{broker.name} - Finance Report</h1>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={handleSetPin} className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">
-            <Key size={16} /> Set PIN
-          </button>
           <button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
             <ShareNetwork size={16} weight="bold" /> Share Link
           </button>
