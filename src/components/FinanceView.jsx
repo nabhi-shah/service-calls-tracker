@@ -293,9 +293,11 @@ export default function FinanceView() {
     <div className="h-screen flex flex-col bg-slate-50 font-sans">
       <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-4">
-          <Link to="/" className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-            <ArrowLeft size={20} weight="bold" />
-          </Link>
+          {!token && (
+            <Link to="/" className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+              <ArrowLeft size={20} weight="bold" />
+            </Link>
+          )}
           <h1 className="text-xl font-bold text-slate-900">{broker.name} - Finance Report</h1>
         </div>
         <div className="flex items-center gap-4">
@@ -313,9 +315,11 @@ export default function FinanceView() {
               ))}
             </select>
           </div>
-          <button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
-            <ShareNetwork size={16} weight="bold" /> Share Link
-          </button>
+          {!token && (
+            <button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+              <ShareNetwork size={16} weight="bold" /> Share Link
+            </button>
+          )}
         </div>
       </header>
 
