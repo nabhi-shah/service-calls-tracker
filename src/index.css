@@ -62,4 +62,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Override indigo with the requested primary color #1F67DA */
+  --color-indigo-50: color-mix(in srgb, #1F67DA 5%, white);
+  --color-indigo-100: color-mix(in srgb, #1F67DA 10%, white);
+  --color-indigo-200: color-mix(in srgb, #1F67DA 20%, white);
+  --color-indigo-300: color-mix(in srgb, #1F67DA 30%, white);
+  --color-indigo-400: color-mix(in srgb, #1F67DA 40%, white);
+  --color-indigo-500: color-mix(in srgb, #1F67DA 60%, white);
+  --color-indigo-600: #1F67DA;
+  --color-indigo-700: color-mix(in srgb, #1F67DA 20%, black);
+  --color-indigo-800: color-mix(in srgb, #1F67DA 40%, black);
+  --color-indigo-900: color-mix(in srgb, #1F67DA 60%, black);
 }
